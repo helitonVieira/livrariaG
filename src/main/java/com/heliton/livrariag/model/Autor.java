@@ -11,6 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "autor")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Autor {

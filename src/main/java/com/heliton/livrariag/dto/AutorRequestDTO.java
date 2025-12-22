@@ -1,8 +1,9 @@
 package com.heliton.livrariag.dto;
 
 
-public record AutorRequestDTO(
+import jakarta.validation.constraints.NotBlank;
 
-        String nome,
-        String nacionalidade
+public record AutorRequestDTO(
+        @NotBlank(message = "Nome é obrigatório")
+        String nome
 ) {}
