@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS livro
+(
+    codl INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    titulo VARCHAR(40) NOT NULL,
+    editora VARCHAR(40),
+    edicao INTEGER,
+    anopublicacao INTEGER,
+    valor NUMERIC(10,2) NOT NULL DEFAULT 0.00
+);
