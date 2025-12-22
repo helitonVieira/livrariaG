@@ -1,7 +1,7 @@
 package com.heliton.livrariag.dto;
 
 
-public record LivroRequestDTO(
+public starecord LivroRequestDTO(
         @NotBlank
         String nome,
         String nacionalidade
