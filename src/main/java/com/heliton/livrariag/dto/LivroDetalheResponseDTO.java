@@ -10,6 +10,7 @@ public record LivroDetalheResponseDTO(
         Integer edicao,
         Integer anoPublicacao,
         BigDecimal valor,
-        Set<AutorResponseDTO> autores
+        Set<AutorResponseDTO> autores,
+        Set<AssuntoResponseDTO> assuntos
 ) {}
 

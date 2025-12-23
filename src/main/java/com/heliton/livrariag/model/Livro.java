@@ -48,6 +48,14 @@ public class Livro {
     )
     private Set<Autor> autores = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "livro_assunto",
+            joinColumns = @JoinColumn(name = "livro_codl"),
+            inverseJoinColumns = @JoinColumn(name = "assunto_codas")
+    )
+    private Set<Assunto> assuntos = new HashSet<>();
+
     public Livro(LivroRequestDTO dto){
         this.titulo = dto.titulo();
         this.editora = dto.editora();
@@ -61,9 +69,19 @@ public class Livro {
         autor.getLivros().add(this);
     }
 
-    public void removerAutor(Autor autor) {
+    /*public void removerAutor(Autor autor) {
         this.autores.remove(autor);
         autor.getLivros().remove(this);
+    }*/
+
+    public void adicionarAssunto(Assunto assunto) {
+        this.assuntos.add(assunto);
+        assunto.getLivros().add(this);
     }
+
+    /*public void removerAssunto(Assunto assunto) {
+        this.assuntos.remove(assunto);
+        assunto.getLivros().remove(this);
+    }*/
 }
 

@@ -1,17 +1,20 @@
 package com.heliton.livrariag.services;
 
+import com.heliton.livrariag.dto.AssuntoResponseDTO;
 import com.heliton.livrariag.dto.AutorResponseDTO;
 import com.heliton.livrariag.dto.LivroDetalheResponseDTO;
 import com.heliton.livrariag.dto.LivroRequestDTO;
-import com.heliton.livrariag.dto.LivroResponseDTO;
+import com.heliton.livrariag.model.Assunto;
 import com.heliton.livrariag.model.Autor;
 import com.heliton.livrariag.model.Livro;
+import com.heliton.livrariag.repositories.AssuntoRepository;
 import com.heliton.livrariag.repositories.AutorRepository;
 import com.heliton.livrariag.repositories.LivroRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,10 +22,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final AutorRepository autorRepository;
+    private final AssuntoRepository assuntoRepository;
 
-    public LivroService(LivroRepository repository, AutorRepository autorRepository) {
+    public LivroService(LivroRepository repository, AutorRepository autorRepository, AssuntoRepository assuntoRepository) {
         this.repository = repository;
         this.autorRepository = autorRepository;
+        this.assuntoRepository = assuntoRepository;
     }
 
     /*public LivroResponseDTO criarOld(LivroRequestDTO dto) {
@@ -35,21 +40,44 @@ public class LivroService {
 
         Livro livro = new Livro(dto);
 
-        List<Autor> autores = autorRepository.findAllById(dto.autoresIds());
-        autores.forEach(livro::adicionarAutor);
+        if (dto.autoresIds() != null && !dto.autoresIds().isEmpty()) {
+            List<Autor> autores = autorRepository.findAllById(dto.autoresIds());
+            if (autores.size() != dto.autoresIds().size()) {
+                throw new RuntimeException("Um ou mais autores não existem");
+            }
+            autores.forEach(livro::adicionarAutor);
+        }
+
+        if (dto.assuntosIds() != null && !dto.assuntosIds().isEmpty()) {
+            List<Assunto> assuntos = assuntoRepository.findAllById(dto.assuntosIds());
+            if (assuntos.size() != dto.assuntosIds().size()) {
+                throw new RuntimeException("Um ou mais assuntos não existem");
+            }
+            assuntos.forEach(livro::adicionarAssunto);
+        }
 
         Livro salvo = repository.save(livro);
+        return mapToDetalheResponse(salvo);
+    }
+
+    private LivroDetalheResponseDTO mapToDetalheResponse(Livro livro) {
+        Set<AutorResponseDTO> autores = livro.getAutores().stream()
+                .map(a -> new AutorResponseDTO(a.getId(), a.getNome()))
+                .collect(Collectors.toSet());
+
+        Set<AssuntoResponseDTO> assuntos = livro.getAssuntos().stream()
+                .map(a -> new AssuntoResponseDTO(a.getId(), a.getDescricao()))
+                .collect(Collectors.toSet());
 
         return new LivroDetalheResponseDTO(
-                salvo.getCodl(),
-                salvo.getTitulo(),
-                salvo.getEditora(),
-                salvo.getEdicao(),
-                salvo.getAnoPublicacao(),
-                salvo.getValor(),
-                salvo.getAutores().stream()
-                        .map(a -> new AutorResponseDTO(a.getId(), a.getNome()))
-                        .collect(Collectors.toSet())
+                livro.getCodl(),
+                livro.getTitulo(),
+                livro.getEditora(),
+                livro.getEdicao(),
+                livro.getAnoPublicacao(),
+                livro.getValor(),
+                autores,
+                assuntos
         );
     }
 
@@ -80,8 +108,8 @@ public class LivroService {
         livro.setAnoPublicacao(dto.anoPublicacao());
         livro.setValor(dto.valor());
 
+        //autor
         livro.getAutores().clear();
-
         if (dto.autoresIds() != null && !dto.autoresIds().isEmpty()) {
             List<Autor> autores = autorRepository.findAllById(dto.autoresIds());
 
@@ -90,6 +118,18 @@ public class LivroService {
             }
             autores.forEach(livro::adicionarAutor);
         }
+
+        //assunto
+        livro.getAssuntos().clear();
+        if (dto.assuntosIds() != null && !dto.assuntosIds().isEmpty()) {
+            List<Assunto> assuntos = assuntoRepository.findAllById(dto.assuntosIds());
+
+            if (assuntos.size() != dto.assuntosIds().size()) {
+                throw new RuntimeException("Um ou mais autores não existem");
+            }
+            assuntos.forEach(livro::adicionarAssunto);
+        }
+
         Livro atualizado = repository.save(livro);
 
         return toResponse(atualizado);
@@ -119,7 +159,11 @@ public class LivroService {
                 livro.getValor(),
                 livro.getAutores().stream()
                         .map(a -> new AutorResponseDTO(a.getId(), a.getNome()))
+                        .collect(Collectors.toSet()),
+                livro.getAssuntos().stream()
+                        .map(a -> new AssuntoResponseDTO(a.getId(), a.getDescricao()))
                         .collect(Collectors.toSet())
+
         );
     }
 }

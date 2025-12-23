@@ -9,7 +9,7 @@ public record LivroRequestDTO(
         Integer edicao,
         Integer anoPublicacao,
         BigDecimal valor,
-        Set<Integer> autoresIds
+        Set<Integer> autoresIds,
+        Set<Integer> assuntosIds
 ) {
-
 }
