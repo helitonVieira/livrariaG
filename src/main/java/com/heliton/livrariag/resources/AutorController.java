@@ -1,9 +1,6 @@
 package com.heliton.livrariag.resources;
 
-import com.heliton.livrariag.dto.AutorRequestDTO;
-import com.heliton.livrariag.dto.AutorResponseDTO;
-import com.heliton.livrariag.dto.LivroRequestDTO;
-import com.heliton.livrariag.dto.LivroResponseDTO;
+import com.heliton.livrariag.dto.*;
 import com.heliton.livrariag.services.AutorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -46,6 +43,11 @@ public class AutorController {
             @RequestBody AutorRequestDTO dto
     ) {
         return service.atualizar(id, dto);
+    }
+
+    @GetMapping("/{id}/livros")
+    public AutorComLivrosDTO buscarAutorComLivros(@PathVariable Integer id) {
+        return service.buscarAutorComLivros(id);
     }
 
     @DeleteMapping("/{id}")

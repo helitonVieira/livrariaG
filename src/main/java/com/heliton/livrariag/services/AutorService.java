@@ -1,13 +1,16 @@
 package com.heliton.livrariag.services;
 
+import com.heliton.livrariag.dto.AutorComLivrosDTO;
 import com.heliton.livrariag.dto.AutorRequestDTO;
 import com.heliton.livrariag.dto.AutorResponseDTO;
+import com.heliton.livrariag.dto.LivroResponseDTO;
 import com.heliton.livrariag.model.Autor;
 import com.heliton.livrariag.repositories.AutorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AutorService {
@@ -56,6 +59,23 @@ public class AutorService {
     @Transactional
     public void deletar(Integer id) {
         repository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public AutorComLivrosDTO buscarAutorComLivros(Integer id) {
+        Autor autor = repository.findWithLivrosById(id)
+                .orElseThrow(() -> new RuntimeException("Autor não encontrado"));
+
+        var livros = autor.getLivros().stream()
+                .map(l -> new LivroResponseDTO(l.getCodl(),
+                        l.getTitulo(),
+                        l.getEditora(),
+                        l.getEdicao(),
+                        l.getAnoPublicacao(),
+                        l.getValor()))
+                .collect(Collectors.toSet());
+
+        return new AutorComLivrosDTO(autor.getId(), autor.getNome(), livros);
     }
 
     private AutorResponseDTO toResponse(Autor autor) {

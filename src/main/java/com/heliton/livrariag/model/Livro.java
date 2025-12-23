@@ -1,5 +1,6 @@
 package com.heliton.livrariag.model;
 
+import com.heliton.livrariag.dto.LivroRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,5 +47,23 @@ public class Livro {
             inverseJoinColumns = @JoinColumn(name = "autor_codau")
     )
     private Set<Autor> autores = new HashSet<>();
+
+    public Livro(LivroRequestDTO dto){
+        this.titulo = dto.titulo();
+        this.editora = dto.editora();
+        this.edicao = dto.edicao();
+        this.anoPublicacao = dto.anoPublicacao();
+        this.valor = dto.valor();
+    }
+
+    public void adicionarAutor(Autor autor) {
+        this.autores.add(autor);
+        autor.getLivros().add(this);
+    }
+
+    public void removerAutor(Autor autor) {
+        this.autores.remove(autor);
+        autor.getLivros().remove(this);
+    }
 }
 

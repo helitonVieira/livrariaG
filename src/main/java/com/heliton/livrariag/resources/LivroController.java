@@ -1,5 +1,6 @@
 package com.heliton.livrariag.controller;
 
+import com.heliton.livrariag.dto.LivroDetalheResponseDTO;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.heliton.livrariag.dto.LivroRequestDTO;
@@ -20,22 +21,22 @@ public class LivroController {
     }
 
     @PostMapping
-    public LivroResponseDTO criar(@RequestBody LivroRequestDTO dto) {
+    public LivroDetalheResponseDTO criar(@RequestBody LivroRequestDTO dto) {
         return service.criar(dto);
     }
 
     @GetMapping
-    public List<LivroResponseDTO> listar() {
+    public List<LivroDetalheResponseDTO> listar() {
         return service.listar();
     }
 
     @GetMapping("/{id}")
-    public LivroResponseDTO buscar(@PathVariable Integer id) {
+    public LivroDetalheResponseDTO buscar(@PathVariable Integer id) {
         return service.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
-    public LivroResponseDTO atualizar(
+    public LivroDetalheResponseDTO atualizar(
             @PathVariable Integer id,
             @RequestBody LivroRequestDTO dto
     ) {
