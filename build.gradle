@@ -31,6 +31,11 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-web"
 
+    //relatorio
+    //implementation fileTree(dir: 'libs', include: ['fonts-extension.jar'])
+    implementation 'net.sf.jasperreports:jasperreports:6.21.3'
+
+
     // database
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.data:spring-data-envers"
