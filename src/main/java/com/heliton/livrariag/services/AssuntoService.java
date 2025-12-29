@@ -31,7 +31,7 @@ public class AssuntoService {
 
     @Transactional(readOnly = true)
     public List<AssuntoResponseDTO> listar() {
-        return repository.findAll()
+        return repository.findAllByOrderByDescricaoAsc()
                 .stream()
                 .map(a -> new AssuntoResponseDTO(a.getId(), a.getDescricao()))
                 .toList();

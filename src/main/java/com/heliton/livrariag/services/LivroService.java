@@ -84,7 +84,7 @@ public class LivroService {
 
     @Transactional(readOnly = true)
     public List<LivroDetalheResponseDTO> listar() {
-        return repository.findAll()
+        return repository.findAllByOrderByTituloAsc()
                 .stream()
                 .map(this::toResponse)
                 .toList();

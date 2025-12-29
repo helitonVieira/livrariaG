@@ -34,7 +34,7 @@ public class AutorService {
 
     @Transactional(readOnly = true)
     public List<AutorResponseDTO> listar() {
-        return repository.findAll()
+        return repository.findAllByOrderByNomeAsc()
                 .stream()
                 .map(a -> new AutorResponseDTO(a.getId(), a.getNome()))
                 .toList();

@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+.gradle/ideaInitScripts/*
+
 ### STS ###
 .apt_generated
 .classpath
